@@ -3,13 +3,19 @@ const pino = require('pino');
 
 async function start() {
   const { state, saveCreds } = await useMultiFileAuthState('auth');
-  const sock = makeWASocket({ logger: pino({ level: 'silent' }), auth: state, browser: ['MibotMF', 'Chrome', '1.0'] });
+  const sock = makeWASocket({ logger: pino({ level: 'silent' }), auth: state, browser: ['MibotMF', 'Chrome', '1.0'], syncFullHistory: false });
   sock.ev.on('creds.update', saveCreds);
 
-  if (!sock.authState.creds.registered) {
-    const numero = "50247820557";
-    const code = await sock.requestPairingCode(numero);
-    console.log('TU CODIGO ES: ' + code);
+  if (!state.creds.registered) {
+    setTimeout(async () => {
+      try {
+        const code = await sock.requestPairingCode("50247820557");
+        console.log('TU CODIGO ES: ' + code);
+        console.log('Metelo en WhatsApp del 47820557');
+      } catch (e) {
+        console.log('Error pidiendo codigo, reiniciando...', e.message);
+      }
+    }, 4000);
   }
 
   sock.ev.on('connection.update', (update) => {
