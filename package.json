@@ -2,8 +2,11 @@
   "name": "mibotmf",
   "version": "1.0.0",
   "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
   "dependencies": {
     "@whiskeysockets/baileys": "latest",
-    "axios": "latest"
+    "pino": "latest"
   }
 }
